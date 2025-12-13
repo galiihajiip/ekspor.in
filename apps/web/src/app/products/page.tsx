@@ -1,0 +1,131 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Package, Plus, Search, Filter, ArrowRight, AlertTriangle } from 'lucide-react';
+import { fetcher, getCategoryLabel, getCountryFlag } from '@/lib/utils';
+
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  targetMarkets: { countryCode: string; countryName: string }[];
+  _count: { gaps: number; checklistItems: number };
+  createdAt: string;
+}
+
+export default function ProductsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+
+  useEffect(() => {
+    async function loadProducts() {
+      try {
+        const data = await fetcher<Product[]>('/api/products');
+        setProducts(data);
+      } catch (error) {
+        console.error('Failed to load products:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadProducts();
+  }, []);
+
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase()) ||
+      product.description?.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+    return matchesSearch && matchesCategory;
+  });
+
+  return (
+    <div className="container py-8">
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold">Produk Saya</h1>
+          <p className="text-muted-foreground mt-1">Kelola produk dan evaluasi kesiapan ekspor</p>
+        </div>
+        <Link href="/products/new">
+          <Button className="gap-2">
+            <Plus className="h-4 w-4" />
+            Tambah Produk
+          </Button>
+        </Link>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Cari produk..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
+        </div>
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <Filter className="h-4 w-4 mr-2" />
+            <SelectValue placeholder="Kategori" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Semua Kategori</SelectItem>
+            <SelectItem value="FOOD">Makanan</SelectItem>
+            <SelectItem value="COSMETICS">Kosmetik</SelectItem>
+            <SelectItem value="APPAREL">Pakaian</SelectItem>
+            <SelectItem value="HANDICRAFT">Kerajinan</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      {loading ? (
+        <div className="text-center py-12 text-muted-foreground">Memuat produk...</div>
+      ) : filteredProducts.length === 0 ? (
+        <Card className="py-12">
+          <CardContent className="text-center">
+            <Package className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+            <h3 className="text-lg font-medium mb-2">{products.length === 0 ? 'Belum ada produk' : 'Tidak ada produk ditemukan'}</h3>
+            <p className="text-muted-foreground mb-6">{products.length === 0 ? 'Mulai dengan menambahkan produk pertama Anda.' : 'Coba ubah filter atau kata kunci pencarian.'}</p>
+            {products.length === 0 && <Link href="/products/new"><Button>Tambah Produk Pertama</Button></Link>}
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredProducts.map((product) => (
+            <Link key={product.id} href={`/products/${product.id}`}>
+              <Card className="h-full hover:border-primary/50 transition-colors cursor-pointer">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <Badge variant="secondary">{getCategoryLabel(product.category)}</Badge>
+                    {product._count.gaps > 0 && (
+                      <div className="flex items-center gap-1 text-warning text-sm">
+                        <AlertTriangle className="h-4 w-4" />
+                        {product._count.gaps}
+                      </div>
+                    )}
+                  </div>
+                  <CardTitle className="mt-2">{product.name}</CardTitle>
+                  <CardDescription className="line-clamp-2">{product.description || 'Tidak ada deskripsi'}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1">
+                      {product.targetMarkets.length > 0 ? product.targetMarkets.map((m) => (
+                        <span key={m.countryCode} title={m.countryName}>{getCountryFlag(m.countryCode)}</span>
+                      )) : <span className="text-sm text-muted-foreground">Belum ada target pasar</span>}
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
