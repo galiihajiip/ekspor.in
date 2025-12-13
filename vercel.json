@@ -1,7 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm --filter @ekspor-in/web build",
-  "outputDirectory": "apps/web/.next",
+  "buildCommand": "cd apps/web && pnpm build",
+  "outputDirectory": ".next",
   "installCommand": "pnpm install",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "rootDirectory": "apps/web"
 }
