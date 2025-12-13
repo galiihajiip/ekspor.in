@@ -1,0 +1,23 @@
+{
+  "name": "ekspor-in",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Export Readiness & Market Entry Intelligence Platform for Indonesian UMKM",
+  "scripts": {
+    "dev": "pnpm --parallel -r dev",
+    "build": "pnpm --parallel -r build",
+    "lint": "pnpm --parallel -r lint",
+    "test": "pnpm --parallel -r test",
+    "db:migrate": "pnpm --filter @ekspor-in/api db:migrate",
+    "db:seed": "pnpm --filter @ekspor-in/api db:seed",
+    "db:generate": "pnpm --filter @ekspor-in/api db:generate",
+    "db:studio": "pnpm --filter @ekspor-in/api db:studio"
+  },
+  "keywords": ["export", "umkm", "indonesia", "trade", "compliance"],
+  "author": "Ekspor.in Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

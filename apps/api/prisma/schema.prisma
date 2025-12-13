@@ -1,0 +1,193 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum ProductCategory {
+  FOOD
+  COSMETICS
+  APPAREL
+  HANDICRAFT
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum ChecklistStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
+}
+
+enum GapStatus {
+  IDENTIFIED
+  IN_PROGRESS
+  RESOLVED
+}
+
+// Models
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  company   String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  products          Product[]
+  complianceReports ComplianceReport[]
+
+  @@map("users")
+}
+
+model Product {
+  id                    String          @id @default(cuid())
+  name                  String
+  category              ProductCategory
+  description           String?
+  composition           String?
+  packagingType         String?
+  existingCertifications String[]
+  imageUrl              String?
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  targetMarkets     TargetMarket[]
+  gaps              Gap[]
+  checklistItems    ChecklistItem[]
+  complianceReports ComplianceReport[]
+
+  @@map("products")
+}
+
+model TargetMarket {
+  id          String   @id @default(cuid())
+  countryCode String
+  countryName String
+  createdAt   DateTime @default(now())
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  requirements Requirement[]
+  gaps         Gap[]
+
+  @@unique([productId, countryCode])
+  @@map("target_markets")
+}
+
+model Requirement {
+  id          String          @id @default(cuid())
+  title       String
+  description String
+  category    ProductCategory
+  countryCode String
+  severity    Severity
+  sourceUrl   String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  targetMarketId String?
+  targetMarket   TargetMarket? @relation(fields: [targetMarketId], references: [id], onDelete: SetNull)
+
+  gaps           Gap[]
+  checklistItems ChecklistItem[]
+
+  @@map("requirements")
+}
+
+model Gap {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  severity    Severity
+  status      GapStatus @default(IDENTIFIED)
+  resolution  String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  targetMarketId String
+  targetMarket   TargetMarket @relation(fields: [targetMarketId], references: [id], onDelete: Cascade)
+
+  requirementId String
+  requirement   Requirement @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+
+  @@map("gaps")
+}
+
+model ChecklistItem {
+  id          String          @id @default(cuid())
+  title       String
+  description String?
+  priority    Int             @default(0)
+  status      ChecklistStatus @default(PENDING)
+  dueDate     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  requirementId String?
+  requirement   Requirement? @relation(fields: [requirementId], references: [id], onDelete: SetNull)
+
+  @@map("checklist_items")
+}
+
+model ComplianceReport {
+  id              String   @id @default(cuid())
+  title           String
+  documentType    String?
+  originalText    String?
+  extractedData   Json?
+  findings        Json?
+  missingFields   String[]
+  suggestedActions String[]
+  aiSummary       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@map("compliance_reports")
+}
+
+model MarketSignal {
+  id              String          @id @default(cuid())
+  countryCode     String
+  countryName     String
+  category        ProductCategory
+  demandOverview  String?
+  buyerChannels   String[]
+  positioningNotes String?
+  keywords        String[]
+  aiGenerated     Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([countryCode, category])
+  @@map("market_signals")
+}
