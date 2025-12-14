@@ -11,8 +11,6 @@ import { Progress } from '@/components/ui/progress';
 import { FileCheck, Upload, FileText, CheckCircle, XCircle, AlertTriangle, Loader2 } from 'lucide-react';
 import { fetcher, getSeverityColor } from '@/lib/utils';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
 interface ComplianceResult {
   id: string;
   overallScore: number;
@@ -56,15 +54,12 @@ export default function CompliancePage() {
     setLoading(true);
     setError(null);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('userId', 'demo-user');
-      const res = await fetch(`${API_URL}/api/compliance/check/upload`, {
+      // Read file content and use text check API
+      const text = await file.text();
+      const data = await fetcher<ComplianceResult>('/api/compliance/check', {
         method: 'POST',
-        body: formData,
+        body: JSON.stringify({ userId: 'demo-user', documentText: text }),
       });
-      if (!res.ok) throw new Error('Upload failed');
-      const data = await res.json();
       setResult(data);
     } catch (err) {
       setError('Gagal mengupload dokumen. Silakan coba lagi.');

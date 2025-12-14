@@ -5,10 +5,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+// Use local API routes (no external backend needed)
+export const API_URL = '';
 
 export async function fetcher<T>(url: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${API_URL}${url}`, {
+  const res = await fetch(url, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
