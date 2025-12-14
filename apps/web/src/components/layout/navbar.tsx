@@ -3,9 +3,10 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Package, Globe, FileCheck, TrendingUp, LayoutDashboard, Settings, Search, User } from 'lucide-react';
+import { Package, Globe, FileCheck, TrendingUp, LayoutDashboard, Settings, Search, User, LogIn } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 const navItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -22,9 +23,7 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center space-x-2 mr-8">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-white font-bold text-sm">
-            E
-          </div>
+          <img src="/logo.svg" alt="Ekspor.in" className="w-8 h-8" />
           <span className="font-bold text-xl">Ekspor.in</span>
         </Link>
 
@@ -50,7 +49,7 @@ export function Navbar() {
           })}
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <div className="relative hidden md:block">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -60,15 +59,20 @@ export function Navbar() {
             />
           </div>
 
+          <ThemeToggle />
+
           <Link href="/settings">
             <Button variant="ghost" size="icon">
               <Settings className="h-5 w-5" />
             </Button>
           </Link>
 
-          <Button variant="ghost" size="icon" className="rounded-full">
-            <User className="h-5 w-5" />
-          </Button>
+          <Link href="/login">
+            <Button variant="default" size="sm" className="gap-2">
+              <LogIn className="h-4 w-4" />
+              <span className="hidden sm:inline">Masuk</span>
+            </Button>
+          </Link>
         </div>
       </div>
     </header>

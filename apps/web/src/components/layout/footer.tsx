@@ -31,7 +31,7 @@ export function Footer() {
         </div>
 
         <div className="mt-6 pt-6 border-t text-center text-sm text-muted-foreground">
-          <p>© 2024 Ekspor.in — Export Readiness & Market Entry Intelligence Platform</p>
+          <p>© 2025 Ekspor.in — Export Readiness & Market Entry Intelligence Platform</p>
           <p className="mt-1">Know your export readiness, before you enter.</p>
         </div>
       </div>
