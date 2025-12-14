@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyC46TG_T5PdmCTBgRKR2OCIAR1WLqgDeqs';
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 const kb: Record<string, string> = {
   fda: 'Untuk ekspor makanan ke AS: 1. FDA Registration 2. Prior Notice 3. Nutrition Facts Label 4. Ingredient List',
