@@ -28,6 +28,7 @@ const navItems = [
   { href: '/markets', label: 'Pasar', icon: Globe },
   { href: '/compliance', label: 'Compliance', icon: FileCheck },
   { href: '/signals', label: 'Signals', icon: TrendingUp },
+  { href: '/pricing', label: 'Harga', icon: Package },
 ];
 
 export function Navbar() {

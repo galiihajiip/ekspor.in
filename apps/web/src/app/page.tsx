@@ -27,10 +27,10 @@ const features = [
 ];
 
 const stats = [
-  { value: '3', label: 'Negara Tujuan' },
+  { value: '12', label: 'Negara Tujuan' },
   { value: '4', label: 'Kategori Produk' },
-  { value: '35+', label: 'Persyaratan Ekspor' },
-  { value: '100%', label: 'Gratis' },
+  { value: '50+', label: 'Persyaratan Ekspor' },
+  { value: 'Rp0', label: 'Mulai Gratis' },
 ];
 
 export default function HomePage() {
@@ -114,19 +114,62 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Pricing Preview */}
+      <section className="py-20 bg-muted/30">
+        <div className="container text-center">
+          <h2 className="text-3xl font-bold mb-4">Harga Terjangkau untuk UMKM</h2>
+          <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Satu keputusan ekspor yang salah bisa menghabiskan jutaan rupiah. Investasi kecil untuk kepastian besar.
+          </p>
+          <div className="grid sm:grid-cols-3 gap-6 max-w-3xl mx-auto mb-8">
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <p className="text-sm text-muted-foreground mb-1">Explore</p>
+                <p className="text-2xl font-bold">Rp0</p>
+                <p className="text-xs text-muted-foreground">Gratis selamanya</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center border-primary">
+              <CardContent className="pt-6">
+                <p className="text-sm text-muted-foreground mb-1">Ready</p>
+                <p className="text-2xl font-bold text-primary">Rp99rb</p>
+                <p className="text-xs text-muted-foreground">/bulan</p>
+              </CardContent>
+            </Card>
+            <Card className="text-center">
+              <CardContent className="pt-6">
+                <p className="text-sm text-muted-foreground mb-1">Scale</p>
+                <p className="text-2xl font-bold">Rp299rb</p>
+                <p className="text-xs text-muted-foreground">/bulan</p>
+              </CardContent>
+            </Card>
+          </div>
+          <Link href="/pricing">
+            <Button variant="outline" className="gap-2">Lihat Semua Paket <ArrowRight className="h-4 w-4" /></Button>
+          </Link>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 bg-primary text-primary-foreground">
         <div className="container text-center">
           <h2 className="text-3xl font-bold mb-4">Siap Memulai Perjalanan Ekspor?</h2>
           <p className="text-primary-foreground/80 mb-8 max-w-2xl mx-auto">
-            Evaluasi kesiapan produk Anda sekarang dan dapatkan insight yang diperlukan untuk memasuki pasar internasional.
+            Mulai gratis, upgrade ketika bisnis Anda siap berkembang.
           </p>
-          <Link href="/products">
-            <Button size="lg" variant="secondary" className="gap-2">
-              Daftarkan Produk Anda
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/login">
+              <Button size="lg" variant="secondary" className="gap-2">
+                Mulai Gratis Sekarang
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/pricing">
+              <Button size="lg" variant="outline" className="bg-transparent border-white text-white hover:bg-white/10">
+                Lihat Harga
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     </div>
