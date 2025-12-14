@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-// Global storage for signals (persists during server runtime)
-export const signalsStore: any[] = [
+// Sample signals data
+const signals = [
   {
     id: '1',
     countryCode: 'US',
@@ -38,8 +38,20 @@ export const signalsStore: any[] = [
     pricingInsights: 'Margin 30-50%. Premium untuk certified organic halal.',
     generatedAt: new Date().toISOString(),
   },
+  {
+    id: '4',
+    countryCode: 'CN',
+    countryName: 'Tiongkok',
+    category: 'COSMETICS',
+    demandOverview: 'Pasar kosmetik China $70B, tercepat pertumbuhannya. Gen Z consumers sangat aktif.',
+    competitorLandscape: 'C-beauty lokal naik pesat. Korean brands kuat. Western brands premium segment.',
+    entryBarriers: 'NMPA registration kompleks. Animal testing issues. Approval 12-18 bulan.',
+    opportunities: 'Cross-border e-commerce bypass animal testing. Live streaming sales booming.',
+    pricingInsights: 'Wide range pricing. Premium untuk imported brands.',
+    generatedAt: new Date().toISOString(),
+  },
 ];
 
 export async function GET() {
-  return NextResponse.json(signalsStore);
+  return NextResponse.json(signals);
 }
