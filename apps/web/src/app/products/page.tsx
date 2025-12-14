@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,10 +18,9 @@ interface Product {
   category: string;
   targetMarkets: { countryCode: string; countryName: string }[];
   _count: { gaps: number; checklistItems: number };
-  createdAt: string;
 }
 
-export default function ProductsPage() {
+function ProductsContent() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,51 +33,32 @@ export default function ProductsPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    async function loadProducts() {
-      try {
-        const data = await fetcher<Product[]>('/api/products');
-        setProducts(data);
-      } catch (error) {
-        console.error('Failed to load products:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadProducts();
+    fetcher<Product[]>('/api/products').then(setProducts).catch(console.error).finally(() => setLoading(false));
   }, []);
 
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(search.toLowerCase()) ||
-      product.description?.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
-    return matchesSearch && matchesCategory;
+  const filtered = products.filter((p) => {
+    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.description?.toLowerCase().includes(search.toLowerCase());
+    return (categoryFilter === 'all' || p.category === categoryFilter) && matchSearch;
   });
 
   return (
     <div className="container px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold">Produk Saya</h1>
           <p className="text-muted-foreground mt-1 text-sm sm:text-base">Kelola produk dan evaluasi kesiapan ekspor</p>
         </div>
         <Link href="/products/new" className="w-full sm:w-auto">
-          <Button className="gap-2 w-full sm:w-auto">
-            <Plus className="h-4 w-4" />
-            Tambah Produk
-          </Button>
+          <Button className="gap-2 w-full sm:w-auto"><Plus className="h-4 w-4" />Tambah Produk</Button>
         </Link>
       </div>
-
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Cari produk..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-[160px]">
-            <Filter className="h-4 w-4 mr-2" />
-            <SelectValue placeholder="Kategori" />
-          </SelectTrigger>
+          <SelectTrigger className="w-full sm:w-[160px]"><Filter className="h-4 w-4 mr-2" /><SelectValue placeholder="Kategori" /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Semua Kategori</SelectItem>
             <SelectItem value="FOOD">Makanan</SelectItem>
@@ -88,43 +68,30 @@ export default function ProductsPage() {
           </SelectContent>
         </Select>
       </div>
-
       {loading ? (
         <div className="text-center py-12 text-muted-foreground">Memuat produk...</div>
-      ) : filteredProducts.length === 0 ? (
-        <Card className="py-12">
-          <CardContent className="text-center">
-            <Package className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">{products.length === 0 ? 'Belum ada produk' : 'Tidak ada produk ditemukan'}</h3>
-            <p className="text-muted-foreground mb-6">{products.length === 0 ? 'Mulai dengan menambahkan produk pertama Anda.' : 'Coba ubah filter atau kata kunci pencarian.'}</p>
-            {products.length === 0 && <Link href="/products/new"><Button>Tambah Produk Pertama</Button></Link>}
-          </CardContent>
-        </Card>
+      ) : filtered.length === 0 ? (
+        <Card className="py-12"><CardContent className="text-center">
+          <Package className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
+          <h3 className="text-lg font-medium mb-2">{products.length === 0 ? 'Belum ada produk' : 'Tidak ditemukan'}</h3>
+          {products.length === 0 && <Link href="/products/new"><Button>Tambah Produk</Button></Link>}
+        </CardContent></Card>
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          {filteredProducts.map((product) => (
-            <Link key={product.id} href={`/products/${product.id}`}>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((p) => (
+            <Link key={p.id} href={/products/+p.id}>
               <Card className="h-full hover:border-primary/50 transition-colors cursor-pointer">
                 <CardHeader>
                   <div className="flex items-start justify-between">
-                    <Badge variant="secondary">{getCategoryLabel(product.category)}</Badge>
-                    {product._count.gaps > 0 && (
-                      <div className="flex items-center gap-1 text-warning text-sm">
-                        <AlertTriangle className="h-4 w-4" />
-                        {product._count.gaps}
-                      </div>
-                    )}
+                    <Badge variant="secondary">{getCategoryLabel(p.category)}</Badge>
+                    {p._count.gaps > 0 && <div className="flex items-center gap-1 text-orange-500 text-sm"><AlertTriangle className="h-4 w-4" />{p._count.gaps}</div>}
                   </div>
-                  <CardTitle className="mt-2">{product.name}</CardTitle>
-                  <CardDescription className="line-clamp-2">{product.description || 'Tidak ada deskripsi'}</CardDescription>
+                  <CardTitle className="mt-2">{p.name}</CardTitle>
+                  <CardDescription className="line-clamp-2">{p.description || 'Tidak ada deskripsi'}</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1">
-                      {product.targetMarkets.length > 0 ? product.targetMarkets.map((m) => (
-                        <span key={m.countryCode} title={m.countryName}>{getCountryFlag(m.countryCode)}</span>
-                      )) : <span className="text-sm text-muted-foreground">Belum ada target pasar</span>}
-                    </div>
+                    <div className="flex gap-1">{p.targetMarkets.length > 0 ? p.targetMarkets.map((m) => <span key={m.countryCode}>{getCountryFlag(m.countryCode)}</span>) : <span className="text-sm text-muted-foreground">Belum ada target</span>}</div>
                     <ArrowRight className="h-4 w-4 text-muted-foreground" />
                   </div>
                 </CardContent>
@@ -134,5 +101,13 @@ export default function ProductsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="container py-12 text-center text-muted-foreground">Memuat...</div>}>
+      <ProductsContent />
+    </Suspense>
   );
 }
