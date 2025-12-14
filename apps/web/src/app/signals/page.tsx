@@ -68,13 +68,13 @@ export default function SignalsPage() {
   });
 
   return (
-    <div className="container py-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="container px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Market Signals</h1>
-          <p className="text-muted-foreground mt-1">Insight pasar dan peluang ekspor berdasarkan AI</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Market Signals</h1>
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">Insight pasar dan peluang ekspor berdasarkan AI</p>
         </div>
-        <Button onClick={loadSignals} variant="outline" className="gap-2">
+        <Button onClick={loadSignals} variant="outline" className="gap-2 w-full sm:w-auto">
           <RefreshCw className="h-4 w-4" />
           Refresh
         </Button>

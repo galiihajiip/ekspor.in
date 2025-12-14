@@ -48,27 +48,27 @@ export default function ProductsPage() {
   });
 
   return (
-    <div className="container py-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="container px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Produk Saya</h1>
-          <p className="text-muted-foreground mt-1">Kelola produk dan evaluasi kesiapan ekspor</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Produk Saya</h1>
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">Kelola produk dan evaluasi kesiapan ekspor</p>
         </div>
-        <Link href="/products/new">
-          <Button className="gap-2">
+        <Link href="/products/new" className="w-full sm:w-auto">
+          <Button className="gap-2 w-full sm:w-auto">
             <Plus className="h-4 w-4" />
             Tambah Produk
           </Button>
         </Link>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Cari produk..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectTrigger className="w-full sm:w-[160px]">
             <Filter className="h-4 w-4 mr-2" />
             <SelectValue placeholder="Kategori" />
           </SelectTrigger>
@@ -94,7 +94,7 @@ export default function ProductsPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filteredProducts.map((product) => (
             <Link key={product.id} href={`/products/${product.id}`}>
               <Card className="h-full hover:border-primary/50 transition-colors cursor-pointer">

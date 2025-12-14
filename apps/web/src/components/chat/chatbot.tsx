@@ -81,17 +81,17 @@ export function Chatbot() {
       {/* Chat Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 right-6 z-50 p-4 bg-primary text-white rounded-full shadow-lg hover:bg-primary/90 transition-all ${
+        className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 p-3 sm:p-4 bg-primary text-white rounded-full shadow-lg hover:bg-primary/90 transition-all ${
           isOpen ? 'hidden' : 'flex'
         } items-center gap-2`}
       >
-        <MessageCircle className="h-6 w-6" />
+        <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6" />
         <span className="hidden sm:inline font-medium">Tanya AI</span>
       </button>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-[380px] max-w-[calc(100vw-48px)] h-[600px] max-h-[calc(100vh-100px)] flex flex-col bg-background border rounded-xl shadow-2xl">
+        <div className="fixed inset-4 sm:inset-auto sm:bottom-6 sm:right-6 z-50 sm:w-[380px] sm:h-[600px] sm:max-h-[calc(100vh-100px)] flex flex-col bg-background border rounded-xl shadow-2xl">
           {/* Header */}
           <div className="flex items-center justify-between p-4 border-b bg-primary text-white rounded-t-xl">
             <div className="flex items-center gap-2">

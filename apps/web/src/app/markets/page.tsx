@@ -72,15 +72,15 @@ export default function MarketsPage() {
   };
 
   return (
-    <div className="container py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Target Pasar</h1>
+    <div className="container px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold">Target Pasar</h1>
         <p className="text-muted-foreground mt-1">
           Jelajahi persyaratan ekspor untuk berbagai negara tujuan
         </p>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
         {loading ? (
           <div className="col-span-3 text-center py-8 text-muted-foreground">Memuat...</div>
         ) : (
@@ -108,9 +108,9 @@ export default function MarketsPage() {
         )}
       </div>
 
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-6">
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <Filter className="h-4 w-4 mr-2" />
             <SelectValue placeholder="Kategori" />
           </SelectTrigger>
@@ -128,12 +128,12 @@ export default function MarketsPage() {
       </div>
 
       <Tabs defaultValue="all" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="all">Semua</TabsTrigger>
-          <TabsTrigger value="CERTIFICATION">Sertifikasi</TabsTrigger>
-          <TabsTrigger value="LABELING">Pelabelan</TabsTrigger>
-          <TabsTrigger value="DOCUMENTATION">Dokumentasi</TabsTrigger>
-          <TabsTrigger value="TESTING">Pengujian</TabsTrigger>
+        <TabsList className="w-full flex-wrap h-auto gap-1 p-1">
+          <TabsTrigger value="all" className="flex-1 min-w-[80px]">Semua</TabsTrigger>
+          <TabsTrigger value="CERTIFICATION" className="flex-1 min-w-[80px]">Sertifikasi</TabsTrigger>
+          <TabsTrigger value="LABELING" className="flex-1 min-w-[80px]">Pelabelan</TabsTrigger>
+          <TabsTrigger value="DOCUMENTATION" className="flex-1 min-w-[80px]">Dokumentasi</TabsTrigger>
+          <TabsTrigger value="TESTING" className="flex-1 min-w-[80px]">Pengujian</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-4">

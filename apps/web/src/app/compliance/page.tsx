@@ -83,10 +83,10 @@ export default function CompliancePage() {
   };
 
   return (
-    <div className="container py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Compliance Checker</h1>
-        <p className="text-muted-foreground mt-1">Verifikasi dokumen ekspor Anda terhadap standar internasional</p>
+    <div className="container px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold">Compliance Checker</h1>
+        <p className="text-muted-foreground mt-1 text-sm sm:text-base">Verifikasi dokumen ekspor Anda terhadap standar internasional</p>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8">

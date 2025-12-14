@@ -56,14 +56,14 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="container py-8">
-      <div className="flex items-center justify-between mb-8">
+    <div className="container px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Ringkasan kesiapan ekspor produk Anda</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Dashboard</h1>
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">Ringkasan kesiapan ekspor produk Anda</p>
         </div>
-        <Link href="/products/new">
-          <Button className="gap-2">
+        <Link href="/products/new" className="w-full sm:w-auto">
+          <Button className="gap-2 w-full sm:w-auto">
             <Plus className="h-4 w-4" />
             Tambah Produk
           </Button>
@@ -71,7 +71,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
@@ -92,7 +92,7 @@ export default function DashboardPage() {
         })}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-8">
+      <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
         {/* Products List */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
