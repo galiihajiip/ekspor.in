@@ -18,6 +18,7 @@ interface Product {
   name: string;
   description: string;
   category: string;
+  image?: string;
   targetMarkets: { countryCode: string; countryName: string }[];
   _count: { gaps: number; checklistItems: number };
 }
@@ -132,7 +133,12 @@ export default function ProductDetailPage() {
 
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <Card>
+          <Card className="overflow-hidden">
+            {product.image && (
+              <div className="aspect-video w-full overflow-hidden bg-muted">
+                <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+              </div>
+            )}
             <CardHeader>
               <Badge variant="secondary" className="w-fit">{getCategoryLabel(product.category)}</Badge>
               <CardTitle className="text-xl sm:text-2xl mt-2">{product.name}</CardTitle>
