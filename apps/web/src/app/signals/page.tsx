@@ -48,11 +48,12 @@ export default function SignalsPage() {
   async function generateSignal() {
     setGenerating(true);
     try {
-      await fetcher('/api/signals/generate', {
+      const newSignal = await fetcher<MarketSignal>('/api/signals/generate', {
         method: 'POST',
         body: JSON.stringify({ category: selectedCategory, countryCode: selectedCountry }),
       });
-      await loadSignals();
+      // Add new signal to the beginning of the list
+      setSignals(prev => [newSignal, ...prev.filter(s => !(s.countryCode === newSignal.countryCode && s.category === newSignal.category))]);
     } catch (error) {
       console.error('Failed to generate signal:', error);
     } finally {
@@ -90,7 +91,7 @@ export default function SignalsPage() {
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
             <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger className="w-full sm:w-[180px]">
+              <SelectTrigger className="w-full sm:w-[200px]">
                 <Globe className="h-4 w-4 mr-2" />
                 <SelectValue placeholder="Negara" />
               </SelectTrigger>
@@ -98,6 +99,15 @@ export default function SignalsPage() {
                 <SelectItem value="US">🇺🇸 Amerika Serikat</SelectItem>
                 <SelectItem value="JP">🇯🇵 Jepang</SelectItem>
                 <SelectItem value="SG">🇸🇬 Singapura</SelectItem>
+                <SelectItem value="CN">🇨🇳 Tiongkok</SelectItem>
+                <SelectItem value="KR">🇰🇷 Korea Selatan</SelectItem>
+                <SelectItem value="AU">🇦🇺 Australia</SelectItem>
+                <SelectItem value="DE">🇩🇪 Jerman</SelectItem>
+                <SelectItem value="GB">🇬🇧 Inggris</SelectItem>
+                <SelectItem value="AE">🇦🇪 Uni Emirat Arab</SelectItem>
+                <SelectItem value="SA">🇸🇦 Arab Saudi</SelectItem>
+                <SelectItem value="MY">🇲🇾 Malaysia</SelectItem>
+                <SelectItem value="TH">🇹🇭 Thailand</SelectItem>
               </SelectContent>
             </Select>
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
@@ -121,7 +131,7 @@ export default function SignalsPage() {
 
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <Select value={countryFilter} onValueChange={setCountryFilter}>
-          <SelectTrigger className="w-full sm:w-[180px]">
+          <SelectTrigger className="w-full sm:w-[200px]">
             <Globe className="h-4 w-4 mr-2" />
             <SelectValue placeholder="Semua Negara" />
           </SelectTrigger>
@@ -130,6 +140,15 @@ export default function SignalsPage() {
             <SelectItem value="US">🇺🇸 Amerika Serikat</SelectItem>
             <SelectItem value="JP">🇯🇵 Jepang</SelectItem>
             <SelectItem value="SG">🇸🇬 Singapura</SelectItem>
+            <SelectItem value="CN">🇨🇳 Tiongkok</SelectItem>
+            <SelectItem value="KR">🇰🇷 Korea Selatan</SelectItem>
+            <SelectItem value="AU">🇦🇺 Australia</SelectItem>
+            <SelectItem value="DE">🇩🇪 Jerman</SelectItem>
+            <SelectItem value="GB">🇬🇧 Inggris</SelectItem>
+            <SelectItem value="AE">🇦🇪 Uni Emirat Arab</SelectItem>
+            <SelectItem value="SA">🇸🇦 Arab Saudi</SelectItem>
+            <SelectItem value="MY">🇲🇾 Malaysia</SelectItem>
+            <SelectItem value="TH">🇹🇭 Thailand</SelectItem>
           </SelectContent>
         </Select>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>

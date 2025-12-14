@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// In-memory storage for demo (resets on redeploy)
-let products: any[] = [
+// Sample products data
+const products: any[] = [
   {
     id: '1',
     name: 'Kopi Arabika Gayo',
-    description: 'Kopi premium dari dataran tinggi Gayo, Aceh',
+    description: 'Kopi premium dari dataran tinggi Gayo, Aceh. Single origin dengan profil rasa fruity dan wine-like.',
     category: 'FOOD',
     userId: 'demo-user',
     targetMarkets: [
@@ -18,11 +18,40 @@ let products: any[] = [
   {
     id: '2',
     name: 'Batik Tulis Solo',
-    description: 'Batik tulis tradisional dengan motif klasik',
+    description: 'Batik tulis tradisional dengan motif klasik Parang dan Kawung. Pewarna alami.',
     category: 'APPAREL',
     userId: 'demo-user',
-    targetMarkets: [{ countryCode: 'SG', countryName: 'Singapura' }],
+    targetMarkets: [
+      { countryCode: 'SG', countryName: 'Singapura' },
+      { countryCode: 'JP', countryName: 'Jepang' },
+    ],
     _count: { gaps: 1, checklistItems: 3 },
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '3',
+    name: 'Minyak Kelapa VCO',
+    description: 'Virgin Coconut Oil organik dari Sulawesi. Cold-pressed, unrefined.',
+    category: 'FOOD',
+    userId: 'demo-user',
+    targetMarkets: [
+      { countryCode: 'AU', countryName: 'Australia' },
+      { countryCode: 'DE', countryName: 'Jerman' },
+    ],
+    _count: { gaps: 3, checklistItems: 6 },
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: '4',
+    name: 'Skincare Bali Alus',
+    description: 'Rangkaian skincare dengan bahan alami Bali - lulur, masker, dan body butter.',
+    category: 'COSMETICS',
+    userId: 'demo-user',
+    targetMarkets: [
+      { countryCode: 'KR', countryName: 'Korea Selatan' },
+      { countryCode: 'CN', countryName: 'Tiongkok' },
+    ],
+    _count: { gaps: 4, checklistItems: 8 },
     createdAt: new Date().toISOString(),
   },
 ];
@@ -32,14 +61,36 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
-  const newProduct = {
-    id: Date.now().toString(),
-    ...body,
-    targetMarkets: [],
-    _count: { gaps: 0, checklistItems: 0 },
-    createdAt: new Date().toISOString(),
-  };
-  products.push(newProduct);
-  return NextResponse.json(newProduct, { status: 201 });
+  try {
+    const body = await request.json();
+    
+    if (!body.name || !body.category) {
+      return NextResponse.json(
+        { error: 'Name and category are required' },
+        { status: 400 }
+      );
+    }
+
+    const newProduct = {
+      id: Date.now().toString(),
+      name: body.name,
+      description: body.description || '',
+      category: body.category,
+      hsCode: body.hsCode || '',
+      userId: body.userId || 'demo-user',
+      targetMarkets: [],
+      _count: { gaps: 0, checklistItems: 0 },
+      createdAt: new Date().toISOString(),
+    };
+
+    products.push(newProduct);
+
+    return NextResponse.json(newProduct, { status: 201 });
+  } catch (error) {
+    console.error('Error creating product:', error);
+    return NextResponse.json(
+      { error: 'Failed to create product' },
+      { status: 500 }
+    );
+  }
 }
