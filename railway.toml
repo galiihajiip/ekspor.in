@@ -3,6 +3,6 @@ builder = "nixpacks"
 buildCommand = "cd apps/api && pnpm install && pnpm prisma generate && pnpm build"
 
 [deploy]
-startCommand = "cd apps/api && node dist/main.js"
+startCommand = "cd apps/api && npx prisma migrate deploy && node dist/main.js"
 healthcheckPath = "/api"
 restartPolicyType = "ON_FAILURE"
