@@ -45,16 +45,24 @@ export function Chatbot() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMessage,
-          history: messages.slice(-10), // Send last 10 messages for context
+          history: messages.slice(-10),
         }),
       });
 
       const data = await response.json();
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
+      
+      if (data.reply) {
+        setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }]);
+      } else if (data.error) {
+        setMessages((prev) => [...prev, { role: 'assistant', content: `Maaf, terjadi kesalahan: ${data.error}` }]);
+      } else {
+        setMessages((prev) => [...prev, { role: 'assistant', content: 'Maaf, tidak ada respons. Silakan coba lagi.' }]);
+      }
     } catch (error) {
+      console.error('Chat error:', error);
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: 'Maaf, terjadi kesalahan. Silakan coba lagi.' },
+        { role: 'assistant', content: 'Maaf, terjadi kesalahan koneksi. Pastikan Anda terhubung ke internet dan coba lagi.' },
       ]);
     } finally {
       setLoading(false);

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+// Use environment variable, fallback to hardcoded for demo
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'AIzaSyDbwp46LiXwl6KgymKWjGEC2k1vSpDSJzI';
 
 const systemPrompt = `Kamu adalah asisten AI untuk platform Ekspor.in - platform evaluasi kesiapan ekspor untuk UMKM Indonesia.
@@ -75,12 +76,13 @@ export async function POST(request: NextRequest) {
     );
 
     if (!response.ok) {
-      const error = await response.text();
-      console.error('Gemini API error:', error);
-      return NextResponse.json(
-        { error: 'Failed to get AI response', reply: 'Maaf, terjadi kesalahan. Silakan coba lagi.' },
-        { status: 500 }
-      );
+      const errorText = await response.text();
+      console.error('Gemini API error:', response.status, errorText);
+      
+      // Return helpful fallback response
+      return NextResponse.json({
+        reply: 'Maaf, AI sedang tidak tersedia. Berikut beberapa informasi umum:\n\n• Untuk ekspor makanan ke AS, diperlukan FDA Registration\n• Ekspor ke Jepang memerlukan label bahasa Jepang\n• Produk halal wajib untuk ekspor ke UAE/Saudi\n\nSilakan coba lagi nanti atau hubungi tim support.',
+      });
     }
 
     const data = await response.json();
@@ -89,9 +91,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ reply });
   } catch (error) {
     console.error('Chat API error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error', reply: 'Maaf, terjadi kesalahan sistem. Silakan coba lagi.' },
-      { status: 500 }
-    );
+    
+    // Return fallback response instead of error
+    return NextResponse.json({
+      reply: 'Maaf, AI sedang mengalami gangguan. Berikut beberapa tips ekspor:\n\n• Pastikan produk memiliki sertifikasi yang diperlukan (BPOM, Halal, dll)\n• Siapkan dokumen ekspor: Invoice, Packing List, COO\n• Pelajari regulasi negara tujuan\n\nSilakan coba lagi dalam beberapa saat.',
+    });
   }
 }
